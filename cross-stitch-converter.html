@@ -2,752 +2,383 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cross-Stitch Converter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cross-Stitch Converter. Free online photo to cross-stitch pattern maker. Бесплатный онлайн-конвертер фото в схему для вышивки крестом.">
+<title id="pageTitle">Cross-Stitch Converter | Free Online Pattern Maker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Black&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 <style>
   :root{
-    --linen:#F3ECE0;
-    --panel:#FFFDF8;
-    --ink:#2B2A28;
-    --muted:#7A7468;
-    --thread:#B9433A;
-    --thread-dark:#8F312A;
-    --teal:#3F6D64;
-    --teal-dark:#2E514A;
-    --line:#DAD0BE;
-    --line-strong:#B6A98C;
+    --paper:#f7f5f0; --panel:#efece4; --ink:#151310; --grey:#726f67;
+    --line:rgba(21,19,16,0.3); --line-soft:rgba(21,19,16,0.14);
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:'Inter',system-ui,sans-serif;
-    color:var(--ink);
-    background:
-      radial-gradient(circle at 1px 1px, rgba(0,0,0,0.045) 1px, transparent 1.6px) 0 0/14px 14px,
-      var(--linen);
-    min-height:100vh;
-    padding:32px 20px 60px;
-  }
-  .wrap{max-width:1180px;margin:0 auto;}
-  header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:20px;
-    margin-bottom:28px;
-    flex-wrap:wrap;
-  }
-  h1{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:34px;
-    margin:0 0 6px;
-    letter-spacing:-0.01em;
-  }
-  .sub{color:var(--muted);font-size:14.5px;margin:0;max-width:520px;line-height:1.5;}
-  .langtoggle{
-    display:flex;
-    border:1.5px solid var(--ink);
-    border-radius:999px;
-    overflow:hidden;
-    flex-shrink:0;
-  }
-  .langtoggle button{
-    background:none;
-    border:none;
-    padding:7px 16px;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    color:var(--ink);
-  }
-  .langtoggle button.active{background:var(--ink);color:var(--linen);}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:'Archivo',sans-serif;min-height:100vh;}
+  body{display:flex;flex-direction:column;align-items:center;padding:0 0 10vh;position:relative;overflow-x:hidden;}
+  .grain{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:5;pointer-events:none;opacity:0.1;mix-blend-mode:multiply;}
 
-  .layout{
-    display:grid;
-    grid-template-columns:300px 1fr;
-    gap:24px;
-  }
-  @media (max-width:880px){ .layout{grid-template-columns:1fr;} }
+  .hero{width:100%;background:var(--paper);border-bottom:1px solid var(--line-soft);padding:6vh 6vw 5vh;position:relative;overflow:hidden;}
+  .hero-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:2vh;}
+  .eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey);}
+  .lang-toggle{display:flex;gap:6px;flex-shrink:0;}
+  .lang-btn{font-family:'Archivo',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;padding:6px 12px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:background .15s ease,color .15s ease;}
+  .lang-btn.active{background:var(--ink);color:var(--paper);}
+  .lang-btn:not(.active):hover{background:var(--line-soft);}
+  .hero h1{font-family:'Archivo Black',sans-serif;font-size:clamp(48px,13vw,128px);line-height:0.86;margin:0;letter-spacing:-0.01em;}
+  .hero .script{font-family:'Mrs Saint Delafield',cursive;font-size:clamp(28px,8vw,68px);display:block;margin-top:-0.05em;margin-left:2%;transform:rotate(-3deg);transform-origin:left top;position:relative;z-index:2;}
+  .hero .caption{max-width:340px;margin-top:5vh;font-size:13px;line-height:1.6;color:var(--grey);font-style:italic;}
 
-  .panel{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:22px;
-  }
-  .panel h2{
-    font-family:'Fraunces',serif;
-    font-size:17px;
-    font-weight:600;
-    margin:0 0 14px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .panel h2::before{content:"✚";color:var(--thread);font-size:14px;}
-
-  .dropzone{
-    border:2px dashed var(--line-strong);
-    border-radius:12px;
-    padding:26px 14px;
-    text-align:center;
-    cursor:pointer;
-    transition:border-color .15s, background .15s;
-    margin-bottom:18px;
-  }
-  .dropzone:hover, .dropzone.drag{
-    border-color:var(--thread);
-    background:rgba(185,67,58,0.05);
-  }
-  .dropzone .icon{font-size:26px;margin-bottom:8px;color:var(--thread);}
-  .dropzone p{margin:0;font-size:13px;color:var(--muted);line-height:1.5;}
-  .dropzone .kbd{
-    display:inline-block;
-    border:1px solid var(--line-strong);
-    border-radius:5px;
-    padding:1px 7px;
-    font-family:monospace;
-    font-size:11.5px;
-    background:#fff;
-  }
-  input[type=file]{display:none;}
-
-  .field{margin-bottom:16px;}
-  .field label{
-    display:flex;
-    justify-content:space-between;
-    font-size:13px;
-    font-weight:600;
-    margin-bottom:7px;
-  }
-  .field label span.val{color:var(--thread);font-weight:600;}
-  input[type=range]{
-    width:100%;
-    accent-color:var(--thread);
-    height:4px;
-  }
-  select{
-    width:100%;
-    padding:8px 10px;
-    border:1px solid var(--line-strong);
-    border-radius:8px;
-    background:#fff;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    color:var(--ink);
-  }
-  .checkrow{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:13px;
-    margin-bottom:10px;
-    cursor:pointer;
-    user-select:none;
-  }
-  .checkrow input{accent-color:var(--thread);width:15px;height:15px;}
-
-  .hint{font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:16px;line-height:1.4;}
-
-  button.primary{
-    width:100%;
-    background:var(--thread);
-    color:#fff;
-    border:none;
-    padding:11px;
-    border-radius:9px;
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:14px;
-    cursor:pointer;
-    margin-top:6px;
-  }
-  button.primary:hover{background:var(--thread-dark);}
-  button.secondary{
-    width:100%;
-    background:none;
-    color:var(--ink);
-    border:1.5px solid var(--ink);
-    padding:9px;
-    border-radius:9px;
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    cursor:pointer;
-    margin-top:8px;
-  }
-  button.secondary:hover{background:var(--ink);color:var(--linen);}
-
-  .stats{
-    display:flex;
-    gap:14px;
-    font-size:12.5px;
-    color:var(--muted);
-    margin-top:12px;
-    border-top:1px solid var(--line);
-    padding-top:12px;
-    flex-wrap:wrap;
-  }
-  .stats b{color:var(--ink);}
-
-  .preview-area{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:22px;
-    min-height:400px;
-  }
-  .tabs{
-    display:flex;
-    gap:6px;
-    margin-bottom:18px;
-  }
-  .tabs button{
-    background:none;
-    border:1px solid var(--line-strong);
-    padding:7px 16px;
-    border-radius:999px;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    color:var(--muted);
-  }
-  .tabs button.active{
-    background:var(--teal);
-    border-color:var(--teal);
-    color:#fff;
-  }
-
-  .canvas-holder{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:repeating-conic-gradient(#f7f3ea 0% 25%, #efe9db 0% 50%) 50% / 22px 22px;
-    border-radius:10px;
-    padding:18px;
-    min-height:320px;
-  }
-  .canvas-holder img, .canvas-holder canvas{
-    max-width:100%;
-    max-height:560px;
-    width:auto;
-    height:auto;
-    display:block;
-    image-rendering:pixelated;
-  }
+  .stage{width:100%;max-width:760px;margin-top:6vh;padding:0 6vw;position:relative;z-index:1;}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .tabs button{padding:8px 14px;}
+  .tabs button.active{background:var(--ink);color:var(--paper);}
+  .dropzone{width:100%;min-height:260px;aspect-ratio:16/10;background:var(--panel);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--line);}
+  .dropzone.has-image{cursor:default;background:#fff;aspect-ratio:auto;padding:10px;}
+  .dropzone.dragging{outline:1px dashed var(--ink);outline-offset:-10px;}
+  .dropzone img,.dropzone canvas{display:none;max-width:100%;max-height:70vh;width:auto;height:auto;image-rendering:pixelated;}
   #origImg{image-rendering:auto;}
+  .empty-state{text-align:center;color:var(--grey);padding:0 24px;pointer-events:none;}
+  .empty-state .mark{display:block;width:34px;height:34px;margin:0 auto 18px;border:1px solid var(--line);position:relative;}
+  .empty-state .mark::before{content:'';position:absolute;inset:8px;border:1px solid var(--line-soft);}
+  .empty-state p{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;margin:0;font-weight:500;color:var(--ink);}
+  .empty-state small{display:block;margin-top:10px;font-size:11px;letter-spacing:0.04em;}
+  input[type="file"]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}
 
-  .empty-state{
-    text-align:center;
-    color:var(--muted);
-    font-size:14px;
-    padding:60px 20px;
-  }
-  .empty-state .big{font-size:32px;margin-bottom:10px;color:var(--line-strong);}
+  .controls{width:100%;max-width:760px;padding:26px 6vw 0;display:flex;flex-direction:column;gap:22px;position:relative;z-index:1;}
+  .row{display:flex;align-items:center;gap:18px;border-top:1px solid var(--line-soft);padding-top:22px;}
+  .row .label{font-size:11px;font-weight:500;letter-spacing:0.22em;color:var(--grey);width:96px;flex-shrink:0;text-transform:uppercase;}
+  .row .value{font-family:'Archivo Black',sans-serif;font-size:16px;width:40px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
+  input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:28px;background:transparent;outline:none;cursor:pointer;}
+  input[type="range"]::-webkit-slider-runnable-track{height:1px;background:var(--line);}
+  input[type="range"]::-moz-range-track{height:1px;background:var(--line);}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ink);border:none;margin-top:-6.5px;transition:transform .15s ease;}
+  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.25);}
+  input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:none;}
+  input[type="range"]:focus-visible::-webkit-slider-thumb{outline:1px solid var(--ink);outline-offset:3px;}
+  select{flex:1;font-family:'Archivo',sans-serif;font-size:13px;padding:10px;border:1px solid var(--line);border-radius:0;background:var(--panel);color:var(--ink);}
+  .checks{display:flex;gap:28px;flex-wrap:wrap;}
+  .check{display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;user-select:none;}
+  .check input{accent-color:var(--ink);width:15px;height:15px;margin:0;}
+  .hint{font-size:11px;color:var(--grey);font-style:italic;line-height:1.5;margin-top:-10px;}
 
-  .legend{
-    margin-top:20px;
-    border-top:1px solid var(--line);
-    padding-top:16px;
-  }
-  .legend h3{
-    font-family:'Fraunces',serif;
-    font-size:15px;
-    font-weight:600;
-    margin:0 0 12px;
-  }
-  .legend-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:8px;
-  }
-  .legend-item{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:12.5px;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:6px 9px;
-  }
-  .swatch{
-    width:22px;height:22px;
-    border-radius:5px;
-    flex-shrink:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:12px;
-    border:1px solid rgba(0,0,0,0.15);
-  }
-  .legend-item .hex{color:var(--muted);font-family:monospace;font-size:11px;}
-  .legend-item .count{margin-left:auto;font-weight:600;}
+  .actions{display:flex;gap:10px;justify-content:space-between;align-items:center;}
+  .actions .left{display:flex;gap:10px;}
+  button{font-family:'Archivo',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;padding:13px 20px;border-radius:0;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:background .15s ease,color .15s ease;}
+  button:hover{background:var(--ink);color:var(--paper);}
+  button.primary{background:var(--ink);color:var(--paper);}
+  button.primary:hover{background:var(--grey);border-color:var(--grey);}
+  button:focus-visible,select:focus-visible{outline:1px solid var(--grey);outline-offset:2px;}
+  .hidden{display:none !important;}
 
-  .toprow{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:6px;}
-  footer.note{margin-top:26px;text-align:center;font-size:12px;color:var(--muted);}
+  .stats{display:flex;gap:8px 24px;flex-wrap:wrap;font-size:12px;color:var(--grey);border-top:1px solid var(--line-soft);padding-top:22px;}
+  .stats b{color:var(--ink);font-weight:600;}
+
+  .legend{border-top:1px solid var(--line-soft);padding-top:22px;}
+  .legend-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;font-size:11px;letter-spacing:0.22em;color:var(--grey);text-transform:uppercase;}
+  .legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;background:var(--panel);border:1px solid var(--line-soft);padding:6px 8px;}
+  .swatch{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;border:1px solid var(--ink);}
+  .legend-item .hex{color:var(--grey);font-size:11px;}
+  .legend-item .count{margin-left:auto;font-family:'Archivo Black',sans-serif;font-size:12px;}
+
+  footer{margin-top:8vh;font-size:11px;letter-spacing:0.04em;color:var(--grey);max-width:760px;width:100%;padding:0 6vw;line-height:1.8;position:relative;z-index:1;}
+
+  @media (max-width:640px){
+    .actions{flex-direction:column-reverse;align-items:stretch;}
+    .actions .left{flex-direction:column;}
+    .row .label{width:72px;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div>
-      <h1 data-i18n="title">Cross-stitch converter</h1>
-      <p class="sub" data-i18n="subtitle">Turn a photo into a cross-stitch pattern. Size and proportions of the image stay exactly as they are — nothing gets stretched.</p>
+<svg class="grain" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.4 0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="eyebrow" data-i18n="eyebrow">photo · thread · pattern</div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnEn">EN</button>
+      <button class="lang-btn" id="btnRu">RU</button>
     </div>
-    <div class="langtoggle">
-      <button id="btnEn" class="active">EN</button>
-      <button id="btnRu">RU</button>
+  </div>
+  <h1 data-i18n="headline">Cross-Stitch</h1>
+  <div class="script" data-i18n="script">converter</div>
+  <p class="caption" data-i18n="caption">a photo, counted stitch by stitch — proportions never stretched.</p>
+</div>
+
+<div class="stage">
+  <div class="tabs hidden" id="tabs">
+    <button class="active" id="tabOrig" data-i18n="original">Original</button>
+    <button id="tabPattern" data-i18n="pattern">Pattern</button>
+  </div>
+  <div class="dropzone" id="dropzone">
+    <div class="empty-state" id="emptyState">
+      <span class="mark"></span>
+      <p data-i18n="choose">Choose an image</p>
+      <small data-i18n="dragHint">or drag & drop, or paste with Ctrl+V</small>
     </div>
-  </header>
+    <img id="origImg" alt="">
+    <canvas id="patternCanvas"></canvas>
+  </div>
+  <input type="file" id="fileInput" accept="image/*">
+</div>
 
-  <div class="layout">
-
-    <div class="panel">
-      <h2 data-i18n="uploadHeading">Image</h2>
-
-      <div class="dropzone" id="dropzone">
-        <div class="icon">⤓</div>
-        <p>
-          <span data-i18n="dropText">Click to choose a photo, drag it here,</span><br>
-          <span data-i18n="pasteHint">or paste with</span> <span class="kbd">Ctrl+V</span>
-        </p>
-      </div>
-      <input type="file" id="fileInput" accept="image/*">
-
-      <div class="field">
-        <label><span data-i18n="widthLabel">Width (stitches)</span><span class="val" id="widthVal">80</span></label>
-        <input type="range" id="widthRange" min="10" max="200" value="80" step="1">
-      </div>
-
-      <div class="field">
-        <label><span data-i18n="colorsLabel">Number of colors</span><span class="val" id="colorsVal">12</span></label>
-        <input type="range" id="colorsRange" min="2" max="36" value="12" step="1">
-      </div>
-
-      <div class="field">
-        <label style="margin-bottom:7px;" data-i18n="fabricLabel">Fabric count (Aida)</label>
-        <select id="fabricSelect">
-          <option value="11">11 ct</option>
-          <option value="14" selected>14 ct</option>
-          <option value="16">16 ct</option>
-          <option value="18">18 ct</option>
-        </select>
-      </div>
-
-      <label class="checkrow">
-        <input type="checkbox" id="showSymbols" checked>
-        <span data-i18n="showSymbols">Show stitch symbols</span>
-      </label>
-      <label class="checkrow">
-        <input type="checkbox" id="showGrid" checked>
-        <span data-i18n="showGrid">Show grid lines</span>
-      </label>
-
-      <div class="hint" data-i18n="aspectHint">Height is calculated automatically from the photo's proportions, so the picture is never squeezed or stretched.</div>
-
-      <button class="primary" id="generateBtn" data-i18n="generate">Generate pattern</button>
-      <button class="secondary" id="downloadBtn" style="display:none;" data-i18n="download">Download pattern (PNG)</button>
-      <button class="secondary" id="resetBtn" style="display:none;" data-i18n="reset">Choose another photo</button>
-
-      <div class="stats" id="statsBox" style="display:none;">
-        <span data-i18n="sizeLabel">Size:</span> <b id="statSize"></b>
-        <span data-i18n="finishedLabel">Finished:</span> <b id="statFinished"></b>
-      </div>
+<div class="controls">
+  <div class="row">
+    <span class="label" data-i18n="widthLabel">Width</span>
+    <input type="range" id="widthRange" min="10" max="200" value="80" step="1">
+    <span class="value" id="widthVal">80</span>
+  </div>
+  <div class="row">
+    <span class="label" data-i18n="colorsLabel">Colors</span>
+    <input type="range" id="colorsRange" min="2" max="36" value="12" step="1">
+    <span class="value" id="colorsVal">12</span>
+  </div>
+  <div class="row">
+    <span class="label" data-i18n="fabricLabel">Aida</span>
+    <select id="fabricSelect">
+      <option value="11">11 ct</option>
+      <option value="14" selected>14 ct</option>
+      <option value="16">16 ct</option>
+      <option value="18">18 ct</option>
+    </select>
+  </div>
+  <div class="row">
+    <div class="checks">
+      <label class="check"><input type="checkbox" id="showSymbols" checked><span data-i18n="showSymbols">Show stitch symbols</span></label>
+      <label class="check"><input type="checkbox" id="showGrid" checked><span data-i18n="showGrid">Show grid lines</span></label>
     </div>
+  </div>
+  <div class="hint" data-i18n="aspectHint">Height follows the photo's proportions, so the picture is never squeezed or stretched.</div>
 
-    <div class="preview-area">
-      <div class="toprow">
-        <div class="tabs" id="tabs" style="display:none;">
-          <button class="active" id="tabOrig" data-i18n="original">Original</button>
-          <button id="tabPattern" data-i18n="pattern">Pattern</button>
-        </div>
-      </div>
-
-      <div class="canvas-holder" id="holder">
-        <div class="empty-state" id="emptyState">
-          <div class="big">✚</div>
-          <div data-i18n="noImage">No photo yet — paste one with Ctrl+V or use the panel on the left.</div>
-        </div>
-        <img id="origImg" style="display:none;">
-        <canvas id="patternCanvas" style="display:none;"></canvas>
-      </div>
-
-      <div class="legend" id="legendBox" style="display:none;">
-        <h3 data-i18n="legend">Thread colors</h3>
-        <div class="legend-grid" id="legendGrid"></div>
-      </div>
+  <div class="actions">
+    <div class="left">
+      <button id="resetBtn" class="hidden" data-i18n="reset">Another photo</button>
+      <button id="downloadBtn" class="hidden" data-i18n="download">Download PNG</button>
     </div>
-
+    <button class="primary" id="generateBtn" data-i18n="generate">Generate pattern</button>
   </div>
 
-  <footer class="note" data-i18n="footerNote">Everything runs in your browser — the photo is never uploaded anywhere.</footer>
+  <div class="stats hidden" id="statsBox">
+    <span><span data-i18n="sizeLabel">Size:</span> <b id="statSize"></b></span>
+    <span><span data-i18n="finishedLabel">Finished:</span> <b id="statFinished"></b></span>
+  </div>
+
+  <div class="legend hidden" id="legendBox">
+    <div class="legend-head"><span data-i18n="legend">Thread colors</span></div>
+    <div class="legend-grid" id="legendGrid"></div>
+  </div>
+  <div class="hint" id="statusHint"></div>
 </div>
+
+<footer data-i18n="footerNote">Processing happens locally in your browser — files are never uploaded.</footer>
 
 <script>
 const t = {
-  en: {
-    title:"Cross-stitch converter",
-    subtitle:"Turn a photo into a cross-stitch pattern. Size and proportions of the image stay exactly as they are — nothing gets stretched.",
-    uploadHeading:"Image",
-    dropText:"Click to choose a photo, drag it here,",
-    pasteHint:"or paste with",
-    widthLabel:"Width (stitches)",
-    colorsLabel:"Number of colors",
-    fabricLabel:"Fabric count (Aida)",
-    showSymbols:"Show stitch symbols",
-    showGrid:"Show grid lines",
-    aspectHint:"Height is calculated automatically from the photo's proportions, so the picture is never squeezed or stretched.",
-    generate:"Generate pattern",
-    download:"Download pattern (PNG)",
-    reset:"Choose another photo",
-    sizeLabel:"Size:",
-    finishedLabel:"Finished:",
-    original:"Original",
-    pattern:"Pattern",
-    noImage:"No photo yet — paste one with Ctrl+V or use the panel on the left.",
-    legend:"Thread colors",
-    footerNote:"Everything runs in your browser — the photo is never uploaded anywhere.",
-    stitchesUnit:"stitches"
+  en:{
+    pageTitle:"Cross-Stitch Converter | Free Online Pattern Maker",
+    eyebrow:"photo · thread · pattern", headline:"Cross-Stitch", script:"converter",
+    caption:"a photo, counted stitch by stitch — proportions never stretched.",
+    choose:"Choose an image", dragHint:"or drag & drop, or paste with Ctrl+V",
+    widthLabel:"Width", colorsLabel:"Colors", fabricLabel:"Aida",
+    showSymbols:"Show stitch symbols", showGrid:"Show grid lines",
+    aspectHint:"Height follows the photo's proportions, so the picture is never squeezed or stretched.",
+    generate:"Generate pattern", download:"Download PNG", reset:"Another photo",
+    sizeLabel:"Size:", finishedLabel:"Finished:", original:"Original", pattern:"Pattern",
+    legend:"Thread colors", stitchesUnit:"stitches",
+    footerNote:"Processing happens locally in your browser — files are never uploaded.",
+    statusNotImage:"That's not an image. Choose a JPG, PNG or WebP file.",
+    statusNeedImage:"Load an image first."
   },
-  ru: {
-    title:"Конвертер в схему для вышивки",
-    subtitle:"Превратите фото в схему для вышивки крестом. Размер и пропорции изображения сохраняются в точности — без растягивания и сжатия.",
-    uploadHeading:"Изображение",
-    dropText:"Нажмите, чтобы выбрать фото, перетащите его сюда,",
-    pasteHint:"или вставьте через",
-    widthLabel:"Ширина (крестиков)",
-    colorsLabel:"Количество цветов",
-    fabricLabel:"Канва (каунт Aida)",
-    showSymbols:"Показывать символы",
-    showGrid:"Показывать сетку",
-    aspectHint:"Высота рассчитывается автоматически по пропорциям фото, поэтому картинка никогда не сжимается и не растягивается.",
-    generate:"Создать схему",
-    download:"Скачать схему (PNG)",
-    reset:"Выбрать другое фото",
-    sizeLabel:"Размер:",
-    finishedLabel:"Готовое изделие:",
-    original:"Оригинал",
-    pattern:"Схема",
-    noImage:"Пока нет фото — вставьте его через Ctrl+V или выберите слева.",
-    legend:"Цвета ниток",
-    footerNote:"Всё работает прямо в браузере — фото никуда не отправляется.",
-    stitchesUnit:"крестиков"
+  ru:{
+    pageTitle:"Конвертер в схему для вышивки крестом | Онлайн",
+    eyebrow:"фото · нитки · схема", headline:"Вышивка", script:"конвертер",
+    caption:"фото, посчитанное крестик за крестиком — без растягивания.",
+    choose:"Выбрать изображение", dragHint:"или перетащите файл, или вставьте через Ctrl+V",
+    widthLabel:"Ширина", colorsLabel:"Цвета", fabricLabel:"Канва",
+    showSymbols:"Показывать символы", showGrid:"Показывать сетку",
+    aspectHint:"Высота считается по пропорциям фото, поэтому картинка не сжимается и не растягивается.",
+    generate:"Создать схему", download:"Скачать PNG", reset:"Другое фото",
+    sizeLabel:"Размер:", finishedLabel:"Готовое изделие:", original:"Оригинал", pattern:"Схема",
+    legend:"Цвета ниток", stitchesUnit:"крестиков",
+    footerNote:"Обработка происходит локально в браузере — файлы никуда не отправляются.",
+    statusNotImage:"Это не изображение. Выберите файл JPG, PNG или WebP.",
+    statusNeedImage:"Сначала загрузите изображение."
   }
 };
-let lang = 'en';
+let lang='en', statusKey=null, sourceImage=null;
+const $=id=>document.getElementById(id);
+const dropzone=$('dropzone'), fileInput=$('fileInput'), origImg=$('origImg'), emptyState=$('emptyState'),
+  tabs=$('tabs'), tabOrig=$('tabOrig'), tabPattern=$('tabPattern'), patternCanvas=$('patternCanvas'),
+  generateBtn=$('generateBtn'), downloadBtn=$('downloadBtn'), resetBtn=$('resetBtn'),
+  statsBox=$('statsBox'), legendBox=$('legendBox'), legendGrid=$('legendGrid'), statusHint=$('statusHint');
 
+function renderStatus(){ statusHint.textContent = statusKey ? t[lang][statusKey] : ''; }
+function setStatus(k){ statusKey=k; renderStatus(); }
 function applyLang(){
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key = el.getAttribute('data-i18n');
-    if(t[lang][key]) el.textContent = t[lang][key];
-  });
-  document.getElementById('btnEn').classList.toggle('active', lang==='en');
-  document.getElementById('btnRu').classList.toggle('active', lang==='ru');
-  if(sourceImage) updateStats();
+  document.documentElement.lang=lang;
+  document.title=t[lang].pageTitle;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ const v=t[lang][el.dataset.i18n]; if(v!==undefined) el.textContent=v; });
+  $('btnEn').classList.toggle('active',lang==='en');
+  $('btnRu').classList.toggle('active',lang==='ru');
+  renderStatus();
+  if(lastW) updateStats();
 }
-document.getElementById('btnEn').onclick = ()=>{ lang='en'; applyLang(); };
-document.getElementById('btnRu').onclick = ()=>{ lang='ru'; applyLang(); };
+$('btnEn').onclick=()=>{lang='en';applyLang();};
+$('btnRu').onclick=()=>{lang='ru';applyLang();};
 
-const SYMBOLS = ['●','■','▲','◆','★','✚','○','□','△','◇','☆','✳','✕','✤','✦','✧','◐','◑','▣','▤','▥','▦','▧','◈','❖','♠','♣','♥','◎','▽','▷','◁','✪','✱','✜','✒'];
+const SYMBOLS=['●','■','▲','◆','★','✚','○','□','△','◇','☆','✳','✕','✤','✦','✧','◐','◑','▣','▤','▥','▦','▧','◈','❖','♠','♣','♥','◎','▽','▷','◁','✪','✱','✜','✒'];
 
-let sourceImage = null;
-
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('fileInput');
-const origImg = document.getElementById('origImg');
-const emptyState = document.getElementById('emptyState');
-const tabs = document.getElementById('tabs');
-const tabOrig = document.getElementById('tabOrig');
-const tabPattern = document.getElementById('tabPattern');
-const patternCanvas = document.getElementById('patternCanvas');
-const generateBtn = document.getElementById('generateBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const resetBtn = document.getElementById('resetBtn');
-const statsBox = document.getElementById('statsBox');
-const legendBox = document.getElementById('legendBox');
-const legendGrid = document.getElementById('legendGrid');
-
-dropzone.addEventListener('click', ()=> fileInput.click());
-fileInput.addEventListener('change', e=>{
-  if(e.target.files && e.target.files[0]) loadFile(e.target.files[0]);
-});
-['dragover','dragenter'].forEach(ev=>{
-  dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.add('drag'); });
-});
-['dragleave','drop'].forEach(ev=>{
-  dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.remove('drag'); });
-});
-dropzone.addEventListener('drop', e=>{
-  if(e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
-});
-window.addEventListener('paste', e=>{
-  const items = e.clipboardData && e.clipboardData.items;
-  if(!items) return;
-  for(const item of items){
-    if(item.type && item.type.indexOf('image') === 0){
-      const blob = item.getAsFile();
-      loadFile(blob);
-      e.preventDefault();
-      break;
-    }
-  }
+dropzone.addEventListener('click',()=>{ if(!sourceImage) fileInput.click(); });
+fileInput.addEventListener('change',e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('dragging');}));
+['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('dragging');}));
+dropzone.addEventListener('drop',e=>{ const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) loadFile(f); });
+window.addEventListener('paste',e=>{
+  const items=e.clipboardData&&e.clipboardData.items; if(!items) return;
+  for(const it of items){ if(it.type&&it.type.startsWith('image/')){ loadFile(it.getAsFile()); e.preventDefault(); break; } }
 });
 
 function loadFile(file){
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = ()=>{
-    sourceImage = img;
-    origImg.src = url;
-    origImg.style.display = 'block';
-    emptyState.style.display = 'none';
-    tabs.style.display = 'flex';
-    showOriginal();
-    resetBtn.style.display = 'block';
-    patternCanvas.style.display = 'none';
-    legendBox.style.display = 'none';
-    downloadBtn.style.display = 'none';
-    statsBox.style.display = 'none';
+  if(!file.type||!file.type.startsWith('image/')){ setStatus('statusNotImage'); return; }
+  const url=URL.createObjectURL(file), img=new Image();
+  img.onload=()=>{
+    sourceImage=img; origImg.src=url;
+    emptyState.style.display='none';
+    dropzone.classList.add('has-image');
+    tabs.classList.remove('hidden'); resetBtn.classList.remove('hidden');
+    [downloadBtn,legendBox,statsBox].forEach(e=>e.classList.add('hidden'));
+    lastW=0; setStatus(null); showOriginal();
   };
-  img.src = url;
+  img.src=url;
 }
-
 function showOriginal(){
-  origImg.style.display = 'block';
-  patternCanvas.style.display = 'none';
-  tabOrig.classList.add('active');
-  tabPattern.classList.remove('active');
+  origImg.style.display='block'; patternCanvas.style.display='none';
+  tabOrig.classList.add('active'); tabPattern.classList.remove('active');
 }
 function showPattern(){
-  origImg.style.display = 'none';
-  patternCanvas.style.display = 'block';
-  tabOrig.classList.remove('active');
-  tabPattern.classList.add('active');
+  origImg.style.display='none'; patternCanvas.style.display='block';
+  tabOrig.classList.remove('active'); tabPattern.classList.add('active');
 }
-tabOrig.onclick = showOriginal;
-tabPattern.onclick = showPattern;
+tabOrig.onclick=showOriginal;
+tabPattern.onclick=()=>{ if(lastW) showPattern(); };
 
-resetBtn.onclick = ()=>{
-  sourceImage = null;
-  origImg.style.display = 'none';
-  patternCanvas.style.display = 'none';
-  emptyState.style.display = 'block';
-  tabs.style.display = 'none';
-  resetBtn.style.display = 'none';
-  downloadBtn.style.display = 'none';
-  legendBox.style.display = 'none';
-  statsBox.style.display = 'none';
-  fileInput.value = '';
+resetBtn.onclick=()=>{
+  sourceImage=null; lastW=0;
+  origImg.style.display='none'; patternCanvas.style.display='none';
+  emptyState.style.display='block'; dropzone.classList.remove('has-image');
+  [tabs,resetBtn,downloadBtn,legendBox,statsBox].forEach(e=>e.classList.add('hidden'));
+  fileInput.value='';
 };
 
-const widthRange = document.getElementById('widthRange');
-const widthVal = document.getElementById('widthVal');
-const colorsRange = document.getElementById('colorsRange');
-const colorsVal = document.getElementById('colorsVal');
-widthRange.oninput = ()=> widthVal.textContent = widthRange.value;
-colorsRange.oninput = ()=> colorsVal.textContent = colorsRange.value;
+const widthRange=$('widthRange'), colorsRange=$('colorsRange');
+widthRange.oninput=()=>$('widthVal').textContent=widthRange.value;
+colorsRange.oninput=()=>$('colorsVal').textContent=colorsRange.value;
 
-let lastPalette = null, lastCounts = null, lastW = 0, lastH = 0;
+let lastPalette=null,lastCounts=null,lastW=0,lastH=0,assignments=null;
 
-generateBtn.onclick = ()=>{
-  if(!sourceImage){ return; }
-  generatePattern();
-  showPattern();
+generateBtn.onclick=()=>{
+  if(!sourceImage){ setStatus('statusNeedImage'); return; }
+  setStatus(null);
+  generatePattern(); showPattern();
 };
-
-document.getElementById('showSymbols').onchange = ()=>{ if(lastPalette) redraw(); };
-document.getElementById('showGrid').onchange = ()=>{ if(lastPalette) redraw(); };
-document.getElementById('fabricSelect').onchange = ()=>{ if(lastPalette) updateStats(); };
+$('showSymbols').onchange=()=>{ if(lastW) redraw(); };
+$('showGrid').onchange=()=>{ if(lastW) redraw(); };
+$('fabricSelect').onchange=()=>{ if(lastW) updateStats(); };
 
 function generatePattern(){
-  const stitchW = parseInt(widthRange.value, 10);
-  const ratio = sourceImage.naturalHeight / sourceImage.naturalWidth;
-  const stitchH = Math.max(1, Math.round(stitchW * ratio));
-  const k = parseInt(colorsRange.value, 10);
-
-  const small = document.createElement('canvas');
-  small.width = stitchW;
-  small.height = stitchH;
-  const sctx = small.getContext('2d');
-  sctx.imageSmoothingEnabled = true;
-  sctx.drawImage(sourceImage, 0, 0, stitchW, stitchH);
-  const data = sctx.getImageData(0, 0, stitchW, stitchH).data;
-
-  const pixels = [];
-  for(let i=0;i<data.length;i+=4){
-    pixels.push([data[i], data[i+1], data[i+2]]);
-  }
-
-  const { palette, assignments, counts } = kMeansQuantize(pixels, k);
-
-  lastPalette = palette;
-  lastCounts = counts;
-  lastW = stitchW;
-  lastH = stitchH;
-  window._assignments = assignments;
-
-  redraw();
-  buildLegend();
-  updateStats();
-
-  downloadBtn.style.display = 'block';
+  const w=parseInt(widthRange.value,10);
+  const h=Math.max(1,Math.round(w*sourceImage.naturalHeight/sourceImage.naturalWidth));
+  const k=parseInt(colorsRange.value,10);
+  const small=document.createElement('canvas'); small.width=w; small.height=h;
+  const sctx=small.getContext('2d'); sctx.imageSmoothingEnabled=true;
+  sctx.drawImage(sourceImage,0,0,w,h);
+  const d=sctx.getImageData(0,0,w,h).data, px=[];
+  for(let i=0;i<d.length;i+=4) px.push([d[i],d[i+1],d[i+2]]);
+  const r=kMeans(px,k);
+  lastPalette=r.palette; lastCounts=r.counts; assignments=r.assignments; lastW=w; lastH=h;
+  redraw(); buildLegend(); updateStats();
+  downloadBtn.classList.remove('hidden');
 }
 
-function kMeansQuantize(pixels, k, iterations){
-  iterations = iterations || 8;
-  const n = pixels.length;
-  k = Math.min(k, n);
-  let centroids = [];
-  const step = Math.max(1, Math.floor(n / k));
-  for(let i=0;i<k;i++){
-    centroids.push(pixels[Math.min(n-1, i*step)].slice());
-  }
-  let assignments = new Array(n).fill(0);
-
-  for(let iter=0; iter<iterations; iter++){
+function kMeans(pixels,k,iters=8){
+  const n=pixels.length; k=Math.min(k,n);
+  const step=Math.max(1,Math.floor(n/k));
+  let cen=[]; for(let i=0;i<k;i++) cen.push(pixels[Math.min(n-1,i*step)].slice());
+  const asg=new Array(n).fill(0);
+  for(let it=0;it<iters;it++){
     for(let i=0;i<n;i++){
-      let best = 0, bestDist = Infinity;
-      const p = pixels[i];
-      for(let c=0;c<centroids.length;c++){
-        const cc = centroids[c];
-        const dr = p[0]-cc[0], dg = p[1]-cc[1], db = p[2]-cc[2];
-        const d = dr*dr+dg*dg+db*db;
-        if(d < bestDist){ bestDist = d; best = c; }
+      let best=0,bd=Infinity; const p=pixels[i];
+      for(let c=0;c<cen.length;c++){
+        const q=cen[c], dr=p[0]-q[0], dg=p[1]-q[1], db=p[2]-q[2], dd=dr*dr+dg*dg+db*db;
+        if(dd<bd){bd=dd;best=c;}
       }
-      assignments[i] = best;
+      asg[i]=best;
     }
-    const sums = centroids.map(()=>[0,0,0,0]);
-    for(let i=0;i<n;i++){
-      const a = assignments[i];
-      sums[a][0]+=pixels[i][0];
-      sums[a][1]+=pixels[i][1];
-      sums[a][2]+=pixels[i][2];
-      sums[a][3]+=1;
-    }
-    for(let c=0;c<centroids.length;c++){
-      if(sums[c][3] > 0){
-        centroids[c] = [
-          Math.round(sums[c][0]/sums[c][3]),
-          Math.round(sums[c][1]/sums[c][3]),
-          Math.round(sums[c][2]/sums[c][3])
-        ];
-      } else {
-        centroids[c] = pixels[Math.floor(Math.random()*n)].slice();
-      }
+    const s=cen.map(()=>[0,0,0,0]);
+    for(let i=0;i<n;i++){ const a=asg[i]; s[a][0]+=pixels[i][0]; s[a][1]+=pixels[i][1]; s[a][2]+=pixels[i][2]; s[a][3]++; }
+    for(let c=0;c<cen.length;c++){
+      cen[c]=s[c][3]>0?[Math.round(s[c][0]/s[c][3]),Math.round(s[c][1]/s[c][3]),Math.round(s[c][2]/s[c][3])]:pixels[Math.floor(Math.random()*n)].slice();
     }
   }
-
-  const counts = new Array(centroids.length).fill(0);
-  assignments.forEach(a=> counts[a]++);
-
-  return { palette: centroids, assignments, counts };
+  const counts=new Array(cen.length).fill(0); asg.forEach(a=>counts[a]++);
+  return {palette:cen,assignments:asg,counts};
 }
 
 function redraw(){
-  const cellSize = 18;
-  const showSymbols = document.getElementById('showSymbols').checked;
-  const showGrid = document.getElementById('showGrid').checked;
-  patternCanvas.width = lastW * cellSize;
-  patternCanvas.height = lastH * cellSize;
-  const ctx = patternCanvas.getContext('2d');
-  const assignments = window._assignments;
-
-  for(let y=0;y<lastH;y++){
-    for(let x=0;x<lastW;x++){
-      const idx = y*lastW+x;
-      const cIdx = assignments[idx];
-      const col = lastPalette[cIdx];
-      ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`;
-      ctx.fillRect(x*cellSize, y*cellSize, cellSize, cellSize);
-
-      if(showSymbols){
-        const lum = 0.299*col[0]+0.587*col[1]+0.114*col[2];
-        ctx.fillStyle = lum > 140 ? 'rgba(0,0,0,0.65)' : 'rgba(255,255,255,0.8)';
-        ctx.font = `${cellSize*0.62}px monospace`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(SYMBOLS[cIdx % SYMBOLS.length], x*cellSize+cellSize/2, y*cellSize+cellSize/2+1);
-      }
+  const cs=18, sym=$('showSymbols').checked, grid=$('showGrid').checked;
+  patternCanvas.width=lastW*cs; patternCanvas.height=lastH*cs;
+  const ctx=patternCanvas.getContext('2d');
+  for(let y=0;y<lastH;y++) for(let x=0;x<lastW;x++){
+    const ci=assignments[y*lastW+x], c=lastPalette[ci];
+    ctx.fillStyle=`rgb(${c[0]},${c[1]},${c[2]})`;
+    ctx.fillRect(x*cs,y*cs,cs,cs);
+    if(sym){
+      const lum=0.299*c[0]+0.587*c[1]+0.114*c[2];
+      ctx.fillStyle=lum>140?'rgba(0,0,0,0.65)':'rgba(255,255,255,0.8)';
+      ctx.font=`${cs*0.62}px monospace`; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(SYMBOLS[ci%SYMBOLS.length],x*cs+cs/2,y*cs+cs/2+1);
     }
   }
-
-  if(showGrid){
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-    ctx.lineWidth = 1;
-    for(let x=0;x<=lastW;x++){
-      ctx.beginPath();
-      ctx.moveTo(x*cellSize, 0);
-      ctx.lineTo(x*cellSize, lastH*cellSize);
+  if(grid){
+    const lines=(every,color,lw)=>{
+      ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.beginPath();
+      for(let x=0;x<=lastW;x+=every){ ctx.moveTo(x*cs,0); ctx.lineTo(x*cs,lastH*cs); }
+      for(let y=0;y<=lastH;y+=every){ ctx.moveTo(0,y*cs); ctx.lineTo(lastW*cs,y*cs); }
       ctx.stroke();
-    }
-    for(let y=0;y<=lastH;y++){
-      ctx.beginPath();
-      ctx.moveTo(0, y*cellSize);
-      ctx.lineTo(lastW*cellSize, y*cellSize);
-      ctx.stroke();
-    }
-    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-    ctx.lineWidth = 1.5;
-    for(let x=0;x<=lastW;x+=10){
-      ctx.beginPath();
-      ctx.moveTo(x*cellSize, 0);
-      ctx.lineTo(x*cellSize, lastH*cellSize);
-      ctx.stroke();
-    }
-    for(let y=0;y<=lastH;y+=10){
-      ctx.beginPath();
-      ctx.moveTo(0, y*cellSize);
-      ctx.lineTo(lastW*cellSize, y*cellSize);
-      ctx.stroke();
-    }
+    };
+    lines(1,'rgba(0,0,0,0.15)',1);
+    lines(10,'rgba(0,0,0,0.4)',1.5);
   }
 }
 
-function rgbToHex(r,g,b){
-  return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
-}
-
+const hex=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
 function buildLegend(){
-  legendGrid.innerHTML = '';
-  lastPalette.forEach((col, i)=>{
-    const lum = 0.299*col[0]+0.587*col[1]+0.114*col[2];
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `
-      <div class="swatch" style="background:rgb(${col[0]},${col[1]},${col[2]});color:${lum>140?'rgba(0,0,0,0.65)':'rgba(255,255,255,0.85)'}">${SYMBOLS[i % SYMBOLS.length]}</div>
-      <div><div class="hex">${rgbToHex(col[0],col[1],col[2])}</div></div>
-      <div class="count">${lastCounts[i]}</div>
-    `;
-    legendGrid.appendChild(item);
+  legendGrid.innerHTML='';
+  lastPalette.forEach((c,i)=>{
+    const lum=0.299*c[0]+0.587*c[1]+0.114*c[2];
+    const el=document.createElement('div'); el.className='legend-item';
+    el.innerHTML=`<div class="swatch" style="background:rgb(${c[0]},${c[1]},${c[2]});color:${lum>140?'rgba(0,0,0,0.65)':'rgba(255,255,255,0.85)'}">${SYMBOLS[i%SYMBOLS.length]}</div><span class="hex">${hex(c[0],c[1],c[2])}</span><span class="count">${lastCounts[i]}</span>`;
+    legendGrid.appendChild(el);
   });
-  legendBox.style.display = 'block';
+  legendBox.classList.remove('hidden');
 }
-
 function updateStats(){
-  if(!lastW) return;
-  const fabricCount = parseInt(document.getElementById('fabricSelect').value, 10);
-  const widthIn = (lastW / fabricCount).toFixed(1);
-  const heightIn = (lastH / fabricCount).toFixed(1);
-  const widthCm = (lastW / fabricCount * 2.54).toFixed(1);
-  const heightCm = (lastH / fabricCount * 2.54).toFixed(1);
-  document.getElementById('statSize').textContent = `${lastW} × ${lastH} ${t[lang].stitchesUnit}`;
-  document.getElementById('statFinished').textContent = `${widthIn}" × ${heightIn}" (${widthCm} × ${heightCm} cm)`;
-  statsBox.style.display = 'flex';
+  const f=parseInt($('fabricSelect').value,10);
+  $('statSize').textContent=`${lastW} × ${lastH} ${t[lang].stitchesUnit}`;
+  $('statFinished').textContent=`${(lastW/f).toFixed(1)}" × ${(lastH/f).toFixed(1)}" (${(lastW/f*2.54).toFixed(1)} × ${(lastH/f*2.54).toFixed(1)} cm)`;
+  statsBox.classList.remove('hidden');
 }
-
-downloadBtn.onclick = ()=>{
-  const link = document.createElement('a');
-  link.download = 'cross-stitch-pattern.png';
-  link.href = patternCanvas.toDataURL('image/png');
-  link.click();
+downloadBtn.onclick=()=>{
+  const a=document.createElement('a'); a.download='cross-stitch-pattern.png';
+  a.href=patternCanvas.toDataURL('image/png'); a.click();
 };
-
 applyLang();
 </script>
 </body>
