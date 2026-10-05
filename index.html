@@ -3,8 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Image Tools</title>
+<title>Free Online Image Tools: Cross-Stitch Pattern, Linocut, Pixel Art, Halftone | fralax</title>
+<meta name="description" content="Free browser tools for photos and PDFs: cross-stitch pattern maker, linocut effect, pixel art converter, stipple halftone, black and white converter and PDF merger. No upload, everything runs locally.">
+<link rel="canonical" href="https://fralax.com/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="fralax">
+<meta property="og:title" content="Free Online Image Tools: Cross-Stitch, Linocut, Pixel Art, Halftone">
+<meta property="og:description" content="Turn photos into cross-stitch patterns, linocut prints, pixel art and halftone. Merge PDFs. Free, private, runs in your browser.">
+<meta property="og:url" content="https://fralax.com/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Black&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","name":"fralax","url":"https://fralax.com/","inLanguage":["en","ru"]},
+{"@type":"ItemList","name":"Image tools","itemListElement":[
+{"@type":"ListItem","position":1,"url":"https://fralax.com/twocolorconverter.html","name":"Two-Color Converter"},
+{"@type":"ListItem","position":2,"url":"https://fralax.com/cross-stitch-converter.html","name":"Cross-Stitch Converter"},
+{"@type":"ListItem","position":3,"url":"https://fralax.com/linocut.html","name":"Linocut Maker"},
+{"@type":"ListItem","position":4,"url":"https://fralax.com/stipple.html","name":"Stipple Halftone"},
+{"@type":"ListItem","position":5,"url":"https://fralax.com/pixelate.html","name":"Pixel Art Maker"},
+{"@type":"ListItem","position":6,"url":"https://fralax.com/pdf-sklejka.html","name":"PDF Merger"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are the tools free?","acceptedAnswer":{"@type":"Answer","text":"Yes. All tools are free and need no registration."}},
+{"@type":"Question","name":"Are my photos uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Images and PDFs are processed locally in your browser and never leave your device."}}]}
+]}
+</script>
 <style>
 :root{--paper:#f7f5f0;--panel:#efece4;--ink:#151310;--grey:#726f67;--line:rgba(21,19,16,.3);--accent:#ff4b1f}
 *{box-sizing:border-box}
@@ -18,7 +44,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'Archivo',sys
 .brand:hover .brand-mark{background:var(--accent)}
 header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:32px}
 h1{font-family:'Archivo Black',sans-serif;font-size:clamp(32px,6vw,56px);line-height:1;margin:0 0 8px;text-transform:uppercase}
-header p{margin:0;color:var(--grey);max-width:480px}
+header p{margin:0;color:var(--grey);max-width:560px}
 .lang{display:flex;border:1px solid var(--ink);flex-shrink:0}
 .lang button{font:600 13px 'Archivo',sans-serif;padding:8px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer}
 .lang button.on{background:var(--ink);color:var(--paper)}
@@ -31,6 +57,12 @@ a.card:hover .n{color:rgba(247,245,240,.7)}
 h2{font-family:'Archivo Black',sans-serif;font-size:20px;margin:0;line-height:1.15}
 .d{color:var(--grey);font-size:14px;margin:0}
 .go{margin-top:auto;padding-top:8px;font-weight:600;font-size:14px}
+.seo{margin-top:56px;border-top:2px solid var(--ink);padding-top:28px}
+.seo h2{font-size:24px;margin:0 0 12px}
+.seo h3{font-size:16px;margin:20px 0 4px}
+.seo p{margin:0 0 12px;max-width:720px}
+.seo ul{max-width:720px;padding-left:20px}
+footer{margin-top:40px;color:var(--grey);font-size:13px}
 @media(prefers-reduced-motion:reduce){a.card,.brand-mark{transition:none}}
 </style>
 </head>
@@ -44,64 +76,95 @@ h2{font-family:'Archivo Black',sans-serif;font-size:20px;margin:0;line-height:1.
   <div class="lang"><button data-l="en" class="on">EN</button><button data-l="ru">RU</button></div>
 </div>
 <header>
-  <h1 data-t="title">Image Tools</h1>
-  <p data-t="sub">A small collection of browser tools for photos and PDFs. Everything runs locally.</p>
+  <h1 data-t="title">Free Online Image Tools</h1>
+  <p data-t="sub">Browser tools for photos and PDFs: cross-stitch patterns, linocut, pixel art, halftone and PDF merging. Free, no upload, everything runs locally.</p>
 </header>
-<div class="grid" id="grid"></div>
+
+<main>
+<nav aria-label="Tools"><div class="grid" id="grid">
+<a class="card" href="twocolorconverter.html"><span class="n">01</span><h2>Two-Color Converter</h2><p class="d">Turn any image into pure black and white with an adjustable threshold.</p><span class="go">Open →</span></a>
+<a class="card" href="cross-stitch-converter.html"><span class="n">02</span><h2>Cross-Stitch Converter</h2><p class="d">Convert a photo into a cross-stitch pattern with a thread palette.</p><span class="go">Open →</span></a>
+<a class="card" href="linocut.html"><span class="n">03</span><h2>Linocut Maker</h2><p class="d">Turn a photo into a bold linocut-style print.</p><span class="go">Open →</span></a>
+<a class="card" href="stipple.html"><span class="n">04</span><h2>Stipple Halftone</h2><p class="d">Render a photo as a plate of dots in a halftone style.</p><span class="go">Open →</span></a>
+<a class="card" href="pixelate.html"><span class="n">05</span><h2>Pixel Art Maker</h2><p class="d">Convert a photo into pixel art with a chosen resolution and palette.</p><span class="go">Open →</span></a>
+<a class="card" href="pdf-sklejka.html"><span class="n">06</span><h2>PDF Merger</h2><p class="d">Combine several PDF files into a single document.</p><span class="go">Open →</span></a>
+</div></nav>
+
+<section class="seo" id="seo"></section>
+</main>
+<footer>© fralax</footer>
 </div>
+
 <script>
 const tools=[
- {
-  f:'twocolorconverter.html',
+ {f:'twocolorconverter.html',
   en:['Two-Color Converter','Turn any image into pure black and white with an adjustable threshold.'],
-  ru:['Ч/Б конвертер','Превращает изображение в чисто чёрно-белое с настраиваемым порогом.']
- },
- {
-  f:'cross-stitch-converter.html',
+  ru:['Ч/Б конвертер','Превращает изображение в чисто чёрно-белое с настраиваемым порогом.']},
+ {f:'cross-stitch-converter.html',
   en:['Cross-Stitch Converter','Convert a photo into a cross-stitch pattern with a thread palette.'],
-  ru:['Схема для вышивки крестиком','Преобразует фото в схему для вышивки крестиком с палитрой ниток.']
- },
- {
-  f:'linocut.html',
+  ru:['Схема для вышивки крестиком','Преобразует фото в схему для вышивки крестиком с палитрой ниток.']},
+ {f:'linocut.html',
   en:['Linocut Maker','Turn a photo into a bold linocut-style print.'],
-  ru:['Линогравюра','Превращает фото в контрастный отпечаток в стиле линогравюры.']
- },
- {
-  f:'stipple.html',
+  ru:['Линогравюра','Превращает фото в контрастный отпечаток в стиле линогравюры.']},
+ {f:'stipple.html',
   en:['Stipple Halftone','Render a photo as a plate of dots in a halftone style.'],
-  ru:['Пунктир и полутона','Превращает фото в изображение из точек в стиле полутона.']
- },
- {
-  f:'pixelate.html',
+  ru:['Пунктир и полутона','Превращает фото в изображение из точек в стиле полутона.']},
+ {f:'pixelate.html',
   en:['Pixel Art Maker','Convert a photo into pixel art with a chosen resolution and palette.'],
-  ru:['Пиксель-арт','Превращает фото в пиксель-арт с выбранным разрешением и палитрой.']
- },
- {
-  f:'pdf-sklejka.html',
+  ru:['Пиксель-арт','Превращает фото в пиксель-арт с выбранным разрешением и палитрой.']},
+ {f:'pdf-sklejka.html',
   en:['PDF Merger','Combine several PDF files into a single document.'],
-  ru:['Склейка PDF','Объединяет несколько PDF-файлов в один документ.']
- }
+  ru:['Склейка PDF','Объединяет несколько PDF-файлов в один документ.']}
 ];
 
 const ui={
-  en:{title:'Image Tools',sub:'A small collection of browser tools for photos and PDFs. Everything runs locally.',open:'Open →'},
-  ru:{title:'Инструменты для изображений',sub:'Небольшой набор браузерных инструментов для фото и PDF. Всё работает локально.',open:'Открыть →'}
+  en:{title:'Free Online Image Tools',sub:'Browser tools for photos and PDFs: cross-stitch patterns, linocut, pixel art, halftone and PDF merging. Free, no upload, everything runs locally.',open:'Open →',
+  meta:'Free browser tools for photos and PDFs: cross-stitch pattern maker, linocut effect, pixel art converter, stipple halftone, black and white converter and PDF merger. No upload, everything runs locally.',
+  seo:`<h2>What you can do here</h2>
+<p>fralax is a set of free online tools for turning photos into patterns, prints and pixel art, and for working with PDF files. Nothing is uploaded: images and documents are processed on your device, so your files stay private.</p>
+<ul>
+<li><strong>Cross-stitch pattern maker.</strong> Convert a photo into a cross-stitch chart with a thread colour palette.</li>
+<li><strong>Linocut effect.</strong> Make a high-contrast linocut-style print from any picture.</li>
+<li><strong>Stipple and halftone.</strong> Render an image as dots, like a stipple drawing or newspaper halftone.</li>
+<li><strong>Pixel art converter.</strong> Pixelate a photo with the resolution and palette you choose.</li>
+<li><strong>Black and white converter.</strong> Get a pure two-color image with an adjustable threshold, useful for stencils and printing.</li>
+<li><strong>PDF merger.</strong> Combine several PDF files into one document.</li>
+</ul>
+<h2>FAQ</h2>
+<h3>Are the tools free?</h3><p>Yes. All tools are free and need no registration.</p>
+<h3>Are my photos uploaded to a server?</h3><p>No. Everything runs locally in your browser and files never leave your device.</p>`},
+  ru:{title:'Бесплатные онлайн-инструменты для изображений',sub:'Браузерные инструменты для фото и PDF: схемы для вышивки крестиком, линогравюра, пиксель-арт, полутона и склейка PDF. Бесплатно, без загрузки на сервер.',open:'Открыть →',
+  meta:'Бесплатные инструменты для фото и PDF: схема для вышивки крестиком из фото, линогравюра, пиксель-арт, полутона, чёрно-белый конвертер и склейка PDF. Без загрузки на сервер, всё работает локально.',
+  seo:`<h2>Что здесь можно сделать</h2>
+<p>fralax — набор бесплатных онлайн-инструментов, которые превращают фото в схемы, гравюры и пиксель-арт, а также работают с PDF. Файлы не загружаются на сервер: обработка идёт прямо в вашем браузере.</p>
+<ul>
+<li><strong>Схема для вышивки крестиком из фото.</strong> Преобразует изображение в схему с палитрой ниток.</li>
+<li><strong>Эффект линогравюры.</strong> Контрастный отпечаток из любой картинки.</li>
+<li><strong>Пунктир и полутона.</strong> Изображение из точек в стиле сухой иглы или газетного растра.</li>
+<li><strong>Пиксель-арт онлайн.</strong> Пикселизация фото с выбором разрешения и палитры.</li>
+<li><strong>Чёрно-белый конвертер.</strong> Чисто двухцветное изображение с настраиваемым порогом, удобно для трафаретов и печати.</li>
+<li><strong>Склейка PDF.</strong> Объединение нескольких PDF-файлов в один.</li>
+</ul>
+<h2>Вопросы и ответы</h2>
+<h3>Инструменты бесплатные?</h3><p>Да, все инструменты бесплатны и не требуют регистрации.</p>
+<h3>Мои фото загружаются на сервер?</h3><p>Нет. Всё работает локально в браузере, файлы не покидают ваше устройство.</p>`}
 };
 
 function render(l){
   document.documentElement.lang=l;
   document.querySelectorAll('[data-t]').forEach(e=>e.textContent=ui[l][e.dataset.t]);
-  document.title=ui[l].title;
+  document.title=l==='ru'?'Бесплатные онлайн-инструменты: схема для вышивки, линогравюра, пиксель-арт, склейка PDF | fralax':'Free Online Image Tools: Cross-Stitch Pattern, Linocut, Pixel Art, Halftone | fralax';
+  document.querySelector('meta[name="description"]').content=ui[l].meta;
   document.getElementById('grid').innerHTML=tools.map((t,i)=>
     `<a class="card" href="${t.f}"><span class="n">${String(i+1).padStart(2,'0')}</span><h2>${t[l][0]}</h2><p class="d">${t[l][1]}</p><span class="go">${ui[l].open}</span></a>`
   ).join('');
+  document.getElementById('seo').innerHTML=ui[l].seo;
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
   try{localStorage.setItem('lang',l)}catch(e){}
 }
 
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>render(b.dataset.l));
 
-// English is the default; only a manually saved choice overrides it
 let s='en';
 try{s=localStorage.getItem('lang')||'en'}catch(e){}
 render(s==='ru'?'ru':'en');
